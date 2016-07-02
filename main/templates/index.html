@@ -5,6 +5,10 @@
     <title>Bizzy Sharing Session</title>
   </head>
   <body>
-
+    {{ range .}}
+    <ul>
+      <li>Name {{.Title}}</li>
+    </ul>
+    {{end}}
   </body>
 </html>

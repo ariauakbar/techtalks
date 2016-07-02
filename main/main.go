@@ -1,33 +1,30 @@
 package main
 
 import (
-  "fmt"
+  //"fmt"
   "github.com/ariauakbar/techtalks/models"
+  "net/http"
+  "path"
+  "html/template"
 )
 
 func main() {
+  http.HandleFunc("/", IndexHandler)
+  http.ListenAndServe(":8080", nil)
+}
+
+func IndexHandler(w http.ResponseWriter, r *http.Request)  {
+  fp := path.Join("templates", "index.html")
+  tmpl, err := template.ParseFiles(fp)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
   u := models.CreateUser("Ariauakbar")
   topics := models.CreateBulkTopics(u)
 
-  fmt.Print(topics)
-
-  // t := models.CreateTopic("Building Real Time Web App with Go", u)
-  // fmt.Printf("%s by %s \n", t.Title, t.Creator.Name)
-  //
-  // t.IncrementVote()
-  // t.IncrementVote()
-  //
-  // fmt.Printf("VoteCount: %d \n", t.VoteCount)
+  if err := tmpl.Execute(w, topics); err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
 }
-
-// func IndexHandler(w http.ResponseWriter, r *http.Request)  {
-//   fp := path.Join("templates", "index.html")
-//   tmpl, err := templates.ParseFiles(fp)
-//   if err != nil {
-//     http.Error(w, err.Error(), http.StatusInternalServerError)
-//     return
-//   }
-//
-//
-//
-// }
