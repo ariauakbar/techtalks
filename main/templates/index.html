@@ -7,7 +7,7 @@
   <body>
     {{ range .}}
     <ul>
-      <li>Name {{.Title}}</li>
+      <li>Title {{.Title}} by {{ .Creator.Name }}</li>
     </ul>
     {{end}}
   </body>
