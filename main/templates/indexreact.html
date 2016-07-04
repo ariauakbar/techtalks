@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Button</title>
+  </head>
+  <body>
+    <div id="root"></div>
+      <script src="https://fb.me/react-0.13.3.js"></script>
+      <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+      <script type="text/jsx">
+        var Card = React.createClass({
+          getInititalState: function(){
+            return {};
+          },
+          render: function() {
+            return (
+              <ul>
+                  <li>Title</li>
+              </ul>
+            )
+          }
+        });
+        React.render(<Card />, document.getElementById("root"))
+      </script>
+  </body>
+</html>
