@@ -6,22 +6,57 @@
   </head>
   <body>
     <div id="root"></div>
+      <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
       <script src="https://fb.me/react-0.13.3.js"></script>
       <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
       <script type="text/jsx">
-        var Card = React.createClass({
-          getInititalState: function(){
-            return {};
+        var TopicList = React.createClass({
+          render: function() {
+            var topicNodes = this.props.data.map(function (topic) {
+              return (<Topic key={topic.ID} title={topic.title}/>);
+            });
+            return (<div><ul>{topicNodes}</ul></div>);
+          }
+        });
+
+        var Topic = React.createClass({
+          render: function() {
+            console.log(this.props.title)
+            return (<li>{this.props.title}</li>);
+          }
+        });
+
+        var MainApp = React.createClass({
+          loadTopicsFromServer: function() {
+            $.ajax({
+              url: "http://localhost:8080/api/v1/topics",
+              dataType: 'json',
+              cache: false,
+              success: function(data) {
+                this.setState({data: data.topics});
+                //console.log(this.state.data)
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error("v1/topics", status, err.toString());
+              }.bind(this)
+            });
+          },
+          getInitialState: function() {
+            return {data: []};
+          },
+          componentDidMount: function() {
+            this.loadTopicsFromServer();
           },
           render: function() {
             return (
-              <ul>
-                  <li>Title</li>
-              </ul>
-            )
+              <div>
+                <h1>Topics</h1>
+                  <TopicList data={this.state.data}/>
+              </div>
+            );
           }
         });
-        React.render(<Card />, document.getElementById("root"))
+        React.render(<MainApp />, document.getElementById("root"))
       </script>
   </body>
 </html>

@@ -4,7 +4,7 @@ package models
 import (
   "fmt"
   "github.com/jinzhu/gorm"
-  // "encoding/json"
+  "encoding/json"
 )
 
 type Topic struct {
@@ -14,9 +14,9 @@ type Topic struct {
   //Creator *User `json:"creator"`
 }
 
-// type Response struct {
-//   Topics []*Topic `json:"topics"`
-// }
+type Response struct {
+  Topics []*Topic `json:"topics"`
+}
 
 /*
 func CreateTopic(title string, creator *User) *Topic {
@@ -64,6 +64,27 @@ func GetAllTopics() []Topic {
   db.Debug().Find(&topics)
 
   return topics
+}
+
+func GetAllTopicsJSON() []byte {
+  db, err :=  DB()
+  if err != nil {
+    panic(err.Error())
+  }
+  defer db.Close()
+
+  topics := []*Topic{}
+  db.Debug().Find(&topics)
+
+  resp := &Response{
+    Topics: topics,
+  }
+
+  jsonresp, err := json.Marshal(resp)
+  if err != nil {
+    panic(err.Error())
+  }
+  return jsonresp;
 }
 
 func CreateTopicTable() {
