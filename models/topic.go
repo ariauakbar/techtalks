@@ -28,7 +28,6 @@ func CreateTopic(title string, creator *User) *Topic {
 
 func CreateTopic(title string) *Topic {
   t := &Topic{Title: title}
-  t.VoteCount = 0
   return t
 }
 
@@ -39,12 +38,30 @@ func (t *Topic) IncrementVote() {
 func CreateBulkTopics() []*Topic {
   const total = 5
   var topics = make([]*Topic, total)
+  db, err := DB()
+  if err != nil {
+    panic(err.Error())
+  }
+  defer db.Close()
 
   for i:=0;i < total;i++ {
     title := fmt.Sprintf("Fundamental Go %d", i)
     t := CreateTopic(title)
-    topics[i] = t
+    db.Debug().Create(&t)
   }
+
+  return topics
+}
+
+func GetAllTopics() []Topic {
+  db, err := DB()
+  if err!=nil {
+    panic(err.Error())
+  }
+  defer db.Close()
+
+  topics := []Topic{}
+  db.Debug().Find(&topics)
 
   return topics
 }

@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-  models.CreateTopicTable()
-  
+//  models.CreateTopicTable()
+
   http.HandleFunc("/", IndexHandler)
   http.ListenAndServe(":8080", nil)
 }
@@ -23,7 +23,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request)  {
     return
   }
 
-  topics := models.CreateBulkTopics()
+  topics := models.GetAllTopics()
   if err := tmpl.Execute(w, topics); err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
   }
