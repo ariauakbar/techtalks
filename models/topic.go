@@ -38,43 +38,25 @@ func (t *Topic) IncrementVote() {
 func CreateBulkTopics() []*Topic {
   const total = 5
   var topics = make([]*Topic, total)
-  db, err := DB()
-  if err != nil {
-    panic(err.Error())
-  }
-  defer db.Close()
-
   for i:=0;i < total;i++ {
     title := fmt.Sprintf("Fundamental Go %d", i)
     t := CreateTopic(title)
-    db.Debug().Create(&t)
+    readDB.Debug().Create(&t)
   }
 
   return topics
 }
 
 func GetAllTopics() []Topic {
-  db, err := DB()
-  if err!=nil {
-    panic(err.Error())
-  }
-  defer db.Close()
-
   topics := []Topic{}
-  db.Debug().Find(&topics)
+  readDB.Debug().Find(&topics)
 
   return topics
 }
 
 func GetAllTopicsJSON() []byte {
-  db, err :=  DB()
-  if err != nil {
-    panic(err.Error())
-  }
-  defer db.Close()
-
   topics := []*Topic{}
-  db.Debug().Find(&topics)
+  readDB.Debug().Find(&topics)
 
   resp := &Response{
     Topics: topics,
@@ -88,13 +70,7 @@ func GetAllTopicsJSON() []byte {
 }
 
 func CreateTopicTable() {
-  db, err := DB()
-  if err != nil {
-    panic(err.Error())
-  }
-  db.Debug().AutoMigrate(&Topic{})
-  // db.Debug().CreateTable(&Topic{})
-  defer db.Close()
+  readDB.Debug().AutoMigrate(&Topic{})
 }
 
 

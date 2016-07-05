@@ -11,6 +11,8 @@ import (
 func main() {
 //  models.CreateTopicTable()
 
+  models.DBInit()
+
   http.HandleFunc("/", IndexHandler)
   http.HandleFunc("/api/v1/topics", TopicsHandler)
   http.ListenAndServe(":8080", nil)

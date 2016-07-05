@@ -5,7 +5,12 @@ import (
 _ "github.com/mattn/go-sqlite3"
 )
 
-func DB() (*gorm.DB, error) {
-  db, err := gorm.Open("sqlite3", "../models/master.db")
-  return db, err
+var readDB *gorm.DB
+
+func DBInit() {
+  var err error
+  readDB, err = gorm.Open("sqlite3", "../models/master.db")
+  if err != nil {
+    panic(err.Error())
+  }
 }
