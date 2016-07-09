@@ -19,10 +19,30 @@
           }
         });
 
+        var VoteButton = React.createClass({
+          localHandlerClick: function (){
+            this.props.localHandlerClick();
+          },
+          render: function(){
+            return (<button onClick={this.localHandlerClick}>{this.props.status}</button>);
+          }
+        });
+
         var Topic = React.createClass({
+          getInitialState: function (){
+            return {status: 0}
+          },
+          handlerClick : function (){
+            var localStatus = this.state.status;
+            localStatus == 0 ? localStatus = 1 : localStatus = 0;
+            this.setState({status: localStatus});
+          },
           render: function() {
-            console.log(this.props.title)
-            return (<li>{this.props.title}</li>);
+            return (
+              <li>{this.props.title} <VoteButton localHandlerClick={this.handlerClick}
+              status={this.state.status}/></li>
+
+            );
           }
         });
 
