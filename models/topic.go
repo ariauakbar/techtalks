@@ -33,6 +33,7 @@ func CreateTopic(title string) *Topic {
 
 func (t *Topic) IncrementVote() {
   t.VoteCount += 1
+  readDB.Debug().Save(&t)
 }
 
 func CreateBulkTopics() []*Topic {
@@ -47,6 +48,10 @@ func CreateBulkTopics() []*Topic {
   return topics
 }
 
+func UpVote() {
+  //readDB.Debug().Find(out, where)
+}
+
 func GetAllTopics() []Topic {
   topics := []Topic{}
   readDB.Debug().Find(&topics)
@@ -56,7 +61,7 @@ func GetAllTopics() []Topic {
 
 func GetAllTopicsJSON() []byte {
   topics := []*Topic{}
-  readDB.Debug().Find(&topics)
+  readDB.Debug().Order("vote_count desc").Find(&topics)
 
   resp := &Response{
     Topics: topics,

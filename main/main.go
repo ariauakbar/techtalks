@@ -6,6 +6,8 @@ import (
   "net/http"
   "path"
   "html/template"
+  "encoding/json"
+  "log"
 )
 
 func main() {
@@ -15,6 +17,7 @@ func main() {
 
   http.HandleFunc("/", IndexHandler)
   http.HandleFunc("/api/v1/topics", TopicsHandler)
+  http.HandleFunc("/api/v1/vote", VoteHandler)
   http.ListenAndServe(":8080", nil)
 }
 
@@ -26,9 +29,28 @@ func IndexHandler(w http.ResponseWriter, r *http.Request)  {
     return
   }
 
-  topics := models.GetAllTopics()
-  if err := tmpl.Execute(w, topics); err != nil {
+  //topics := models.GetAllTopics()
+  if err := tmpl.Execute(w, nil); err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+
+func VoteHandler(w http.ResponseWriter, r *http.Request) {
+  if r.Method == "POST" {
+    //resp := []string{"Hello": "Hau", "Cool":"yoyoy"}
+    var t models.Topic
+    err := json.NewDecoder(r.Body).Decode(&t)
+    if err != nil {
+      panic(err)
+    }
+
+    log.Print(t.ID)
+    t.IncrementVote()
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    resp := models.GetAllTopicsJSON()
+    w.Write(resp)
   }
 }
 
